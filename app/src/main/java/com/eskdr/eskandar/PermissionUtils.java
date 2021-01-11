@@ -15,11 +15,6 @@ public class PermissionUtils extends Activity {
     private static final int REQUEST_PERMISSION = 1;
     private static Intent requestIntent = null;
 
-    public static boolean permissionGranted(
-            int requestCode, int permissionCode, int[] grantResults) {
-        return requestCode == permissionCode && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
