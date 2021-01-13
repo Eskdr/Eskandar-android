@@ -1,42 +1,63 @@
 package com.eskdr.eskandar;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 
-public class PermissionUtils {
+public class PermissionUtils extends Activity {
 
-    public static boolean requestPermission(
-            Activity activity, int requestCode, String... permissions) {
-        boolean granted = true;
+    private static final int REQUEST_PERMISSION = 1;
+    private static Intent requestIntent = null;
+
+    public static boolean permissionGranted(
+            int requestCode, int permissionCode, int[] grantResults) {
+        return requestCode == permissionCode && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         ArrayList<String> permissionsNeeded = new ArrayList<>();
 
+        requestIntent = getIntent();
+        String[] permissions = requestIntent.getStringArrayExtra("permissions");
+
         for (String s : permissions) {
-            int permissionCheck = ContextCompat.checkSelfPermission(activity, s);
+            int permissionCheck = ContextCompat.checkSelfPermission(this, s);
             boolean hasPermission = (permissionCheck == PackageManager.PERMISSION_GRANTED);
-            granted &= hasPermission;
 
             if (!hasPermission) {
                 permissionsNeeded.add(s);
             }
         }
 
-        if (granted) {
-            return true;
-        } else {
-            ActivityCompat.requestPermissions(activity,
+        if (permissionsNeeded.size() > 0) {
+            ActivityCompat.requestPermissions(this,
                     permissionsNeeded.toArray(new String[permissionsNeeded.size()]),
-                    requestCode);
+                    REQUEST_PERMISSION);
+        } else {
+            requestIntent.putExtra("permissionResult", 0);
+            setResult(RESULT_OK, requestIntent);
 
-            return false;
+            finish();
         }
     }
 
-    public static boolean permissionGranted(
-            int requestCode, int permissionCode, int[] grantResults) {
-        return requestCode == permissionCode && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        int granted = 0;
+        for (int e : grantResults) {
+            granted += e;
+        }
+
+        requestIntent.putExtra("permissionResult", granted);
+        setResult(RESULT_OK, requestIntent);
+
+        finish();
     }
 }
