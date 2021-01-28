@@ -22,7 +22,6 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
 
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,6 +30,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".PermissionUtils" />
-    </application>
+        <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
+                <data android:host="oauth"
+                      android:scheme="@string/kakao_app_key_auth"/>
+            </intent-filter>
+        </activity>
+    </application>
 </manifest>

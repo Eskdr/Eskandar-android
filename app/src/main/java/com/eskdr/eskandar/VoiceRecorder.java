@@ -33,28 +33,13 @@ public class VoiceRecorder extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.voice_recorder, container, false);
 
-        Button start = (Button) view.findViewById(R.id.start_record);
-        Button stop  = (Button) view.findViewById(R.id.stop_record);
-        Button play  = (Button) view.findViewById(R.id.play_record);
+        Button start = view.findViewById(R.id.start_record);
+        Button stop = view.findViewById(R.id.stop_record);
+        Button play = view.findViewById(R.id.play_record);
 
-        start.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startRecord();
-            }
-        });
-        stop.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopRecord();
-            }
-        });
-        play.setOnClickListener(new Button.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                playRecord();
-            }
-        });
+        start.setOnClickListener(view1 -> startRecord());
+        stop.setOnClickListener(view2 -> stopRecord());
+        play.setOnClickListener(view3 -> playRecord());
 
         return view;
     }
@@ -64,7 +49,6 @@ public class VoiceRecorder extends Fragment {
 
         if (voice.exists()) {
             voice.delete();
-        } else {
         }
 
         path = voice.getAbsolutePath();
@@ -80,7 +64,6 @@ public class VoiceRecorder extends Fragment {
             recorder.start();
         } catch (IOException e) {
             e.printStackTrace();
-
         }
     }
 
@@ -92,13 +75,13 @@ public class VoiceRecorder extends Fragment {
         }
     }
 
-    private void playRecord(){
-        try{
+    private void playRecord() {
+        try {
             player = new MediaPlayer();
             player.setDataSource(path);
             player.prepare();
             player.start();
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
